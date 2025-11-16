@@ -1,0 +1,8 @@
+DROP POLICY IF EXISTS "Admins can manage all users" ON public.users;
+
+CREATE POLICY "Admins can manage all users"
+ON public.users
+FOR ALL
+USING (
+  role = 'admin' OR auth.uid()::text = user_id::text
+);

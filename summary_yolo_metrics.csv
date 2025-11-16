@@ -1,0 +1,6 @@
+precision,recall,f1_score,accuracy(mAP50),model_name
+0.9245,0.8559,0.8889,0.9052,yolo11n
+0.901,0.7952,0.8448,0.849,yolov8-thy
+0.8253,0.6798,0.7455,0.7611,yolov8-waste-highacc
+0.9157,0.8322,0.8719,0.8965,yolov8m
+0.8964,0.7779,0.833,0.8411,yolov8s

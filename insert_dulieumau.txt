@@ -1,0 +1,50 @@
+-- =============================================
+--  SEED DATA for Waste Classification Project
+--  (Supabase / PostgreSQL)
+-- =============================================
+
+-- 1️⃣ Tạo tài khoản admin mặc định
+-- ⚠️ Ghi chú:
+-- - Nếu bạn đang dùng Supabase Auth, có thể tạo user qua dashboard rồi cập nhật role sau.
+-- - Nếu bạn muốn chèn trực tiếp, dòng dưới sẽ tạo mật khẩu bcrypt '123456'.
+
+INSERT INTO public.users (name, email, password_hash, role)
+VALUES (
+  'Admin',
+  'admin@example.com',
+  crypt('123456', gen_salt('bf')),
+  'admin'
+);
+
+-- 2️⃣ Seed dữ liệu cho bảng waste_categories
+INSERT INTO public.waste_categories (name, description, bin_color, guide_text)
+VALUES
+-- 1. Nhựa
+('Nhựa',
+ 'Bao gồm chai nhựa, ly nhựa, túi nylon, hộp đựng thực phẩm, vỏ chai nước... Các vật liệu có ký hiệu tái chế như PET, HDPE, PP...',
+ 'Xanh dương',
+ 'Rửa sạch, để khô, nén lại nếu có thể rồi cho vào thùng nhựa tái chế.'),
+
+-- 2. Giấy
+('Giấy',
+ 'Bao gồm giấy in, bìa carton, báo cũ, hộp giấy, túi giấy... Không bao gồm giấy ướt, giấy dầu hoặc giấy than.',
+ 'Vàng',
+ 'Giữ khô, không dính dầu mỡ. Gấp gọn hoặc bó lại rồi cho vào thùng giấy.'),
+
+-- 3. Kim loại
+('Kim loại',
+ 'Bao gồm lon nước ngọt, hộp thiếc, vỏ lon bia, nhôm, sắt, thép... có thể tái chế nhiều lần.',
+ 'Xám',
+ 'Làm sạch, để khô rồi bỏ vào thùng chứa kim loại tái chế.'),
+
+-- 4. Thủy tinh
+('Thủy tinh',
+ 'Bao gồm chai lọ thủy tinh, bình đựng nước, lọ gia vị... Không bao gồm bóng đèn hoặc gương vỡ.',
+ 'Đỏ',
+ 'Cẩn thận khi bỏ, tránh vỡ. Có thể rửa sạch và tái sử dụng hoặc cho vào thùng thủy tinh tái chế.'),
+
+-- 5. Hữu cơ
+('Hữu cơ',
+ 'Thức ăn thừa, vỏ trái cây, lá cây, bã cà phê, bã chè... có thể phân hủy sinh học.',
+ 'Xanh lá',
+ 'Cho vào thùng rác hữu cơ để ủ compost hoặc thu gom riêng.');

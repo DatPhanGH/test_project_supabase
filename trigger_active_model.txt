@@ -1,0 +1,30 @@
+
+-- Tạo hàm trigger:
+CREATE OR REPLACE FUNCTION ensure_single_active_model()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Khi có model mới được kích hoạt (is_active = TRUE)
+  IF NEW.is_active = TRUE THEN
+    -- Tắt các model khác
+    UPDATE ai_models
+    SET is_active = FALSE
+    WHERE model_id != NEW.model_id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Tạo trigger gọi hàm mỗi khi update:
+-- DROP TRIGGER IF EXISTS trg_single_active_model ON ai_models;
+
+CREATE TRIGGER trg_single_active_model
+BEFORE UPDATE OR INSERT ON ai_models
+FOR EACH ROW
+EXECUTE FUNCTION ensure_single_active_model();
+
+-- test thử 
+UPDATE ai_models SET is_active = TRUE WHERE name = 'waste_yolov8s';
+
+select * from ai_models
+

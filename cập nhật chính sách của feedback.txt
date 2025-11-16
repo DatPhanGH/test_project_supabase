@@ -1,0 +1,10 @@
+-- Thêm RLS Policy cho UPDATE feedbacks
+-- Chạy file này trong Supabase SQL Editor
+
+-- Policy cho phép users update feedback của chính họ
+CREATE POLICY "Users can update their own feedbacks"
+ON public.feedbacks
+FOR UPDATE 
+USING (auth.uid()::text = user_id::text)
+WITH CHECK (auth.uid()::text = user_id::text);
+

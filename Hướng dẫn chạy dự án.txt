@@ -1,0 +1,34 @@
+Nên chạy môi trường dòng lệnh bằng cmd (command prompt)
+
+--------------------------------BACKEND---------------------------------------
+0. tạo một command prompt mới
+1. chuyển hướng đường dẫn vào thư mục backend bằng lệnh: cd backend
+2. hiện đang trong đường dẫn backend, tạo môi trường ảo bằng lệnh: python -m venv venv
+3. kích hoạt môi trường ảo bằng lệnh: venv\Scripts\activate
+4. sau khi kích hoạt môi trường ảo, trước đường dẫn có thêm tên môi trường đã kích hoạt. Ví dụ: (venv) D:\doantotnghiep\2_project_supabase>
+5. cài thư viện trong file requirements.txt bằng lệnh: pip install -r requirements.txt
+6. hiện đang ở trong đường dẫn thư mục backend, cần quay lại thư mục cha bằng lệnh: cd ..
+7. chạy file main.py để thực hiện quy trình gửi ảnh đến hệ thống nhận diện và trả kết quả phân loại
+bằng lệnh: python -m backend.main
+
+Lưu ý: file .env;  credentials.json;  token.json không nên chia sẻ cho người khác bên ngoài dự án.
+
+
+--------------------------------FRONTEND---------------------------------------
+0. tạo một command prompt mới 
+1. chuyển hướng đường dẫn vào thư mục frontend\waste_detection bằng lệnh: cd frontend\waste_detection
+2. chạy lệnh: npm install để tải node_modules
+3. chạy giao diện bằng lệnh: npm run dev -> sẽ tự động mở trang web mặc định ở phía người dùng 
+    theo url: http://localhost:3000/index.html
+4. chạy giao diện admin -> thay đổi đường dẫn thành  http://localhost:3000/admin/index.html
+
+
+
+---------------------------------APPMOBILE-----------------------------------------
+0. tạo một command prompt mới 
+1. chuyển hướng đường dẫn vào thư mục frontend\ai_trash_app2 bằng lệnh: cd frontend\ai_trash_app2 
+2. chạy lệnh: flutter pub get -> để cài đặt các thư viện trong file pubspec.yaml
+4. mở máy ảo android trong Android studio hoặc dùng thiết bị thật kết nối "usb to c"
+3. chạy lệnh: flutter run để chạy giao diện mobile.
+
+* Lưu ý: luôn chạy backend\main.py để có thể thực hiện chức năng nhận diện và phân loại rác thải.

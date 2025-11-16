@@ -1,0 +1,23 @@
+-- 🪄 Tự động thêm bản ghi vào public.users khi có user mới trong auth.users
+
+-- 1️⃣ Tạo hàm đồng bộ
+CREATE OR REPLACE FUNCTION public.handle_new_auth_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.users (user_id, name, email, role)
+  VALUES (
+    NEW.id,                           -- id từ auth.users
+    NEW.raw_user_meta_data->>'full_name',
+    NEW.email,
+    'user'
+  )
+  ON CONFLICT (user_id) DO NOTHING; -- tránh trùng lặp nếu đã tồn tại
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 2️⃣ Tạo trigger
+CREATE TRIGGER on_auth_user_created
+AFTER INSERT ON auth.users
+FOR EACH ROW
+EXECUTE FUNCTION public.handle_new_auth_user();
