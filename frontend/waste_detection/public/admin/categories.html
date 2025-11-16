@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Waste Categories - Admin EcoSort</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="../images/logo.png" alt="EcoSort">
+                <span>EcoSort Admin</span>
+            </div>
+            <nav class="admin-nav">
+                <ul>
+                    <li><a href="index.html">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </a></li>
+                    <li><a href="users.html">
+                        <i class="fas fa-users"></i> Quản lý Users
+                    </a></li>
+                    <li><a href="models.html">
+                        <i class="fas fa-robot"></i> AI Models
+                    </a></li>
+                    <li><a href="categories.html" class="active">
+                        <i class="fas fa-tags"></i> Waste Categories
+                    </a></li>
+                    <li><a href="feedbacks.html">
+                        <i class="fas fa-comments"></i> Feedbacks
+                    </a></li>
+                    <!-- <li><a href="statistics.html">
+                        <i class="fas fa-chart-bar"></i> Thống kê
+                    </a></li> -->
+                </ul>
+            </nav>
+            <div class="admin-user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <span class="user-name" id="adminUserName">Admin</span>
+                    <span class="user-role">Administrator</span>
+                </div>
+                <button class="btn-logout" onclick="handleAdminLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 class="page-title">Quản lý Waste Categories</h1>
+                <div class="admin-actions">
+                    <button class="btn-admin btn-primary" onclick="showAddCategoryModal()">
+                        <i class="fas fa-plus"></i> Thêm loại rác mới
+                    </button>
+                    <a href="../index.html" class="btn-back-to-site">
+                        <i class="fas fa-home"></i> Về trang chủ
+                    </a>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <!-- Categories table -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên loại rác</th>
+                                <th>Mô tả</th>
+                                <th>Màu thùng</th>
+                                <th>Hướng dẫn</th>
+                                <th>Ngày tạo</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTableBody">
+                            <tr>
+                                <td colspan="7" class="loading-text">Đang tải...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal thêm/sửa category -->
+    <div id="categoryModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Thêm loại rác mới</h2>
+                <button class="modal-close" onclick="closeCategoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="categoryForm" class="modal-body">
+                <input type="hidden" id="categoryId" name="category_id">
+                
+                <div class="form-group">
+                    <label for="categoryName">Tên loại rác <span class="required">*</span></label>
+                    <input type="text" id="categoryName" name="name" 
+                           placeholder="VD: Plastic, Glass, Metal, Paper, Organic" required>
+                    <small class="form-hint">Tên loại rác (phải là duy nhất)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoryDescription">Mô tả</label>
+                    <textarea id="categoryDescription" name="description" rows="3" 
+                              placeholder="Mô tả về loại rác này..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoryBinColor">Màu thùng rác</label>
+                    <input type="text" id="categoryBinColor" name="bin_color" 
+                           placeholder="VD: Xanh lá, Xanh dương, Vàng, Đỏ, Nâu">
+                    <small class="form-hint">Màu sắc của thùng rác dành cho loại này</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoryGuideText">Hướng dẫn phân loại</label>
+                    <textarea id="categoryGuideText" name="guide_text" rows="5" 
+                              placeholder="Nhập hướng dẫn, mỗi dòng là một mục hướng dẫn...&#10;VD:&#10;Rửa sạch trước khi bỏ&#10;Bỏ vào thùng màu xanh lá&#10;Không bỏ chung với rác khác"></textarea>
+                    <small class="form-hint">Mỗi dòng là một mục hướng dẫn (sẽ hiển thị dạng danh sách)</small>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-admin btn-secondary" onclick="closeCategoryModal()">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn-admin btn-primary">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="js/admin-main.js"></script>
+    <script src="js/admin-categories.js"></script>
+</body>
+</html>
+

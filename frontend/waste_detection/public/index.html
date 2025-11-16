@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Phân loại Rác thải Thông minh - EcoSort</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="./images/logo.png" alt="EcoSort Logo" class="logo-image">
+                <span>EcoSort</span>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#home" class="active">Trang chủ</a></li>
+                    <li><a href="#classify">Phân loại</a></li>
+                    <li><a href="#guide">Hướng dẫn</a></li>
+                    <li><a href="#history">Lịch sử</a></li>
+                    <li><a href="/pages/login.html" class="btn-login">Đăng nhập</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Hệ thống Phân loại Rác thải Thông minh</h1>
+                <p>Sử dụng trí tuệ nhân tạo để nhận diện và phân loại rác thải một cách chính xác, góp phần bảo vệ môi trường</p>
+                <div class="hero-buttons">
+                    <a href="#classify" class="btn btn-primary">
+                        <i class="fas fa-camera"></i>
+                        Chụp/Tải hình ảnh
+                    </a>
+                    <a href="#guide" class="btn btn-secondary">
+                        <i class="fas fa-book"></i>
+                        Hướng dẫn sử dụng
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="./images/hero-recycling.svg" alt="Recycling illustration">
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <div class="container">
+            <h2>Chức năng chính</h2>
+            <div class="actions-grid">
+                <div class="action-card">
+                    <i class="fas fa-camera-retro"></i>
+                    <h3>Chụp hình ảnh</h3>
+                    <p>Chụp ảnh rác thải để nhận diện và phân loại tự động</p>
+                 
+                    <a class="btn btn-outline" href="#classify">Chụp ảnh</a>
+                </div>
+                <div class="action-card">
+                    <i class="fas fa-upload"></i>
+                    <h3>Tải ảnh lên</h3>
+                    <p>Tải ảnh từ thiết bị để phân tích loại rác thải</p>
+                     <a class="btn btn-outline" href="#classify">Tải ảnh</a>
+                </div>
+                <div class="action-card">
+                    <i class="fas fa-list-alt"></i>
+                    <h3>Xem hướng dẫn</h3>
+                    <p>Tìm hiểu cách phân loại các loại rác thải khác nhau</p>
+                    
+                    <a class="btn btn-outline" href="#guide">Xem hướng dẫn</a>
+                </div>
+                <div class="action-card">
+                    <i class="fas fa-history"></i>
+                    <h3>Lịch sử phân loại</h3>
+                    <p>Xem lại các lần phân loại rác thải đã thực hiện</p>
+                    <a class="btn btn-outline" href="#history">Xem lịch sử</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Classification Section -->
+    <section id="classify" class="classify-section">
+        <div class="container">
+            <h2>Phân loại Rác thải</h2>
+            <div class="classify-container">
+                <div class="upload-area">
+                    <div class="upload-box" id="uploadBox">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3>Kéo thả ảnh vào đây hoặc click để chọn</h3>
+                        <p>Hỗ trợ: JPG, PNG, GIF (tối đa 10MB)</p>
+                        <input type="file" id="imageInput" accept="image/*" hidden>
+                    </div>
+                    <div class="camera-option">
+                        <button class="btn btn-camera" id="cameraBtn">
+                            <i class="fas fa-camera"></i>
+                            Chụp ảnh từ camera
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="result-area" id="resultArea" style="display: none;">
+                    <div class="image-preview-container">
+                        <div class="image-preview-wrapper">
+                            <img id="previewImage" src="" alt="Preview" onload="onImageLoad()">
+                            <canvas id="boundingBoxCanvas"></canvas>
+                        </div>
+                        <div class="image-toggle-controls" id="imageToggleControls" style="display: none;">
+                            <button id="toggleBoundingBoxBtn" class="btn btn-sm btn-outline">
+                                <i class="fas fa-border-all"></i> <span id="toggleBoundingBoxText">Hiển thị Bounding Box</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="resultCard" class="result-card-container"></div>
+                    <div id="errorMessage" class="error-message" style="display:none;">
+                        <div class="error-content">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Không nhận thấy có vật thể nào trong ảnh. Vui lòng thử lại với ảnh khác!</p>
+                        </div>
+                    </div>
+                    <div class="result-actions">
+                        <button id="retryBtn" class="btn btn-outline">
+                            <i class="fas fa-redo"></i> Thử lại với ảnh khác
+                        </button>
+                    </div>
+
+
+                    <!-- <div class="classification-result">
+                        <h3>Kết quả phân loại:</h3>
+                        <div class="result-card" id="resultCard">
+                            <div class="waste-type">
+                                <i class="fas fa-bottle-water"></i>
+                                <span class="type-name">Chai nhựa</span>
+                                <span class="confidence">95%</span>
+                            </div>
+                            <div class="disposal-info">
+                                <h4>Hướng dẫn xử lý:</h4>
+                                <p>Rác tái chế - Vui lòng rửa sạch và bỏ vào thùng rác màu xanh</p>
+                            </div>
+                        </div>
+                        <div class="result-actions">
+                            <button class="btn btn-primary" onclick="saveResult()">
+                                <i class="fas fa-save"></i>
+                                Lưu kết quả
+                            </button>
+                            <button class="btn btn-outline" onclick="retryClassification()">
+                                <i class="fas fa-redo"></i>
+                                Thử lại
+                            </button>
+                        </div>
+                        <div class="error-message" id="errorMessage" style="display: none;">
+                            <div class="error-content">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <p>Vui lòng chụp/tải ảnh rõ ràng hơn. Hệ thống không thể nhận diện được vật phẩm rác này.</p>
+                                <button class="btn btn-secondary" onclick="retryClassification()">
+                                    <i class="fas fa-camera"></i>
+                                    Chụp lại
+                                </button>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Waste Guide Section -->
+    <section id="guide" class="guide-section">
+        <div class="container">
+            <h2>Hướng dẫn Phân loại Rác thải</h2>
+            <div class="guide-grid" id="wasteGuideGrid">
+                <!-- Các thẻ .guide-card sẽ được sinh tự động từ JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="stats-section">
+        <div class="container">
+            <h2>Thống kê Hệ thống</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="statUserClassifications">0</div>
+                    <div class="stat-label">Lượt phân loại</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statAvgConfidence">0%</div>
+                    <div class="stat-label">Độ chính xác</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statTotalUsers">0</div>
+                    <div class="stat-label">Người dùng</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statTotalPredictions">0</div>
+                    <div class="stat-label">Rác được phân loại</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Classification History Section -->
+    <section id="history" class="history-section">
+        <div class="container">
+            <h2>Lịch sử Phân loại</h2>
+            <p class="section-description">Xem lại các lần phân loại rác thải bạn đã thực hiện</p>
+            
+            <div class="history-filters">
+                <div class="filter-group">
+                    <label for="dateFilter">Lọc theo ngày:</label>
+                    <select id="dateFilter">
+                        <option value="all">Tất cả</option>
+                        <option value="today">Hôm nay</option>
+                        <option value="week">7 ngày qua</option>
+                        <option value="month">Tháng này</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="typeFilter">Loại rác:</label>
+                    <select id="typeFilter">
+                        <option value="all">Tất cả loại</option>
+                        <option value="recyclable">Rác tái chế</option>
+                        <option value="organic">Rác hữu cơ</option>
+                        <option value="hazardous">Rác độc hại</option>
+                        <option value="general">Rác thông thường</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="history-list" id="historyList">
+                <div class="empty-history" id="emptyHistory">
+                    <i class="fas fa-history"></i>
+                    <h3>Chưa có lịch sử phân loại</h3>
+                    <p>Hãy bắt đầu phân loại rác thải để xem lịch sử tại đây</p>
+                    <a href="#classify" class="btn btn-primary">
+                        <i class="fas fa-camera"></i>
+                        Bắt đầu phân loại
+                    </a>
+                </div>
+                
+                <!-- Sample history items (will be populated by JavaScript) -->
+                <div class="history-item" style="display: none;">
+                    <div class="history-image">
+                        <img src="" alt="Waste item">
+                    </div>
+                    <div class="history-content">
+                        <div class="history-header">
+                            <h4 class="waste-name">Chai nhựa</h4>
+                            <span class="history-date">15/10/2024 14:30</span>
+                        </div>
+                        <div class="history-details">
+                            <span class="waste-category recyclable">
+                                <i class="fas fa-recycle"></i>
+                                Rác tái chế
+                            </span>
+                            <span class="confidence-score">95%</span>
+                        </div>
+                        <p class="disposal-instruction">Rửa sạch và bỏ vào thùng rác màu xanh lá</p>
+                    </div>
+                    <div class="history-actions">
+                        <button class="btn-icon" title="Xem chi tiết">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-icon" title="Chia sẻ">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        <button class="btn-icon danger" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-pagination" id="historyPagination" style="display: none;">
+                <button class="btn btn-outline" id="prevPage">
+                    <i class="fas fa-chevron-left"></i>
+                    Trước
+                </button>
+                <span class="page-info">Trang 1 / 5</span>
+                <button class="btn btn-outline" id="nextPage">
+                    Sau
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <img src="./images/logo.png" alt="EcoSort Logo" class="logo-image">
+                        <span>EcoSort</span>
+                    </div>
+                    <p>Hệ thống phân loại rác thải thông minh, góp phần xây dựng môi trường xanh - sạch - đẹp</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết</h4>
+                    <ul>
+                        <li><a href="#home">Trang chủ</a></li>
+                        <li><a href="#classify">Phân loại</a></li>
+                        <li><a href="#guide">Hướng dẫn</a></li>
+                        <li><a href="./pages/login.html">Đăng nhập</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên hệ</h4>
+                    <p><i class="fas fa-envelope"></i> info@ecosort.vn</p>
+                    <p><i class="fas fa-phone"></i> (+84) 123-456-789</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Hà Nội, Việt Nam</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EcoSort. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="./js/supabase-config.js"></script>
+    <script src="./js/main.js"></script>
+    <script type="module" src="./js/load-waste-guide.js"></script>
+
+</body>
+</html>

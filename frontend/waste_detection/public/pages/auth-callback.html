@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực - EcoSort</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .callback-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .callback-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="callback-container">
+        <div class="callback-box">
+            <div class="spinner"></div>
+            <h2>Đang xác thực tài khoản...</h2>
+            <p id="status">Vui lòng đợi trong giây lát</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://abvvhzvedobpmdgdtfba.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFidnZoenZlZG9icG1kZ2R0ZmJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1MzIxMDcsImV4cCI6MjA3ODEwODEwN30.x-lHCiZrIpTlBaNsh-dmeT9_sDLJREk9HPaohwNqhLg';
+        
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        async function handleAuthCallback() {
+            const statusEl = document.getElementById('status');
+            
+            try {
+                // Lấy session từ URL
+                const { data, error } = await supabaseClient.auth.getSession();
+                
+                if (error) throw error;
+                
+                if (data.session) {
+                    statusEl.textContent = 'Xác thực thành công! Đang chuyển hướng...';
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 1500);
+                } else {
+                    statusEl.textContent = 'Không tìm thấy phiên đăng nhập. Đang chuyển hướng...';
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('Lỗi xác thực:', error);
+                statusEl.textContent = 'Có lỗi xảy ra. Vui lòng đăng nhập lại.';
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+        }
+        
+        handleAuthCallback();
+    </script>
+</body>
+</html>

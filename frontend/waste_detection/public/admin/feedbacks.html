@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Feedbacks - Admin EcoSort</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="../images/logo.png" alt="EcoSort">
+                <span>EcoSort Admin</span>
+            </div>
+            <nav class="admin-nav">
+                <ul>
+                    <li><a href="index.html">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </a></li>
+                    <li><a href="users.html">
+                        <i class="fas fa-users"></i> Quản lý Users
+                    </a></li>
+                    <li><a href="models.html">
+                        <i class="fas fa-robot"></i> AI Models
+                    </a></li>
+                    <li><a href="categories.html">
+                        <i class="fas fa-tags"></i> Waste Categories
+                    </a></li>
+                    <li><a href="feedbacks.html" class="active">
+                        <i class="fas fa-comments"></i> Feedbacks
+                    </a></li>
+                    <!-- <li><a href="statistics.html">
+                        <i class="fas fa-chart-bar"></i> Thống kê
+                    </a></li> -->
+                </ul>
+            </nav>
+            <div class="admin-user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <span class="user-name" id="adminUserName">Admin</span>
+                    <span class="user-role">Administrator</span>
+                </div>
+                <button class="btn-logout" onclick="handleAdminLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 class="page-title">Quản lý Feedbacks</h1>
+                <div class="admin-actions">
+                    <button class="btn-admin btn-primary" onclick="refreshImages()">
+                        <i class="fas fa-sync"></i> Làm mới
+                    </button>
+                    <a href="../index.html" class="btn-back-to-site">
+                        <i class="fas fa-home"></i> Về trang chủ
+                    </a>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <!-- Filters -->
+                <div class="filters-bar">
+                    <input type="text" id="imageSearch" placeholder="Tìm kiếm theo user email..." 
+                           class="search-input">
+                    <select id="statusFilter" class="filter-select">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="uploaded">Uploaded</option>
+                        <option value="processing">Processing</option>
+                        <option value="done">Done</option>
+                        <option value="failed">Failed</option>
+                    </select>
+                    <select id="hasFeedbackFilter" class="filter-select">
+                        <option value="all">Tất cả ảnh</option>
+                        <option value="with_feedback">Có feedback</option>
+                        <option value="no_feedback">Chưa có feedback</option>
+                    </select>
+                </div>
+
+                <!-- Images grid -->
+                <div class="images-grid" id="imagesGrid">
+                    <div class="loading-text">Đang tải...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal xem feedbacks của ảnh -->
+    <div id="feedbackModal" class="modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>Feedbacks cho ảnh</h2>
+                <button class="modal-close" onclick="closeFeedbackModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Image preview with bounding boxes -->
+                <div class="image-preview-section">
+                    <div class="image-container-wrapper">
+                        <div class="image-container" id="imageContainer">
+                            <img id="modalImagePreview" src="" alt="Image preview">
+                            <canvas id="bboxCanvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="image-actions">
+                        <button class="btn-admin btn-primary" id="toggleBboxBtn" onclick="toggleBoundingBoxes()">
+                            <i class="fas fa-eye"></i> Hiện Bounding Boxes
+                        </button>
+                        <button class="btn-admin btn-success" onclick="downloadSelectedImage()">
+                            <i class="fas fa-download"></i> Tải ảnh về máy
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Predictions list -->
+                <div class="predictions-section">
+                    <h3>Danh sách Predictions</h3>
+                    <div id="predictionsList" class="predictions-list">
+                        <p class="loading-text">Đang tải predictions...</p>
+                    </div>
+                </div>
+                
+                <!-- Feedbacks list -->
+                <div class="feedbacks-section">
+                    <h3>Danh sách Feedbacks</h3>
+                    <div id="feedbacksList" class="feedbacks-list">
+                        <p class="loading-text">Đang tải feedbacks...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-admin btn-secondary" onclick="closeFeedbackModal()">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="js/admin-main.js"></script>
+    <script src="js/admin-feedbacks.js"></script>
+</body>
+</html>
+

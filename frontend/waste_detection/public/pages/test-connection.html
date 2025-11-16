@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Supabase - EcoSort</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        .status.success { background: #d1fae5; color: #065f46; }
+        .status.error { background: #fee2e2; color: #991b1b; }
+        .status.loading { background: #dbeafe; color: #1e40af; }
+        .btn-test {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        pre {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔌 Test Supabase</h1>
+        
+        <div class="test-section">
+            <h3>1. Thông tin cấu hình</h3>
+            <div id="config-info"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. Test kết nối</h3>
+            <button class="btn-test" onclick="testConnection()">Kiểm tra kết nối</button>
+            <div id="connection-status"></div>
+            <pre id="connection-result" style="display:none;"></pre>
+        </div>
+
+        <div class="test-section">
+            <h3>3. Test đăng ký</h3>
+            <button class="btn-test" onclick="testSignUp()">Tạo tài khoản test</button>
+            <div id="signup-status"></div>
+            <pre id="signup-result" style="display:none;"></pre>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://abvvhzvedobpmdgdtfba.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFidnZoenZlZG9icG1kZ2R0ZmJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1MzIxMDcsImV4cCI6MjA3ODEwODEwN30.x-lHCiZrIpTlBaNsh-dmeT9_sDLJREk9HPaohwNqhLg';
+
+        document.getElementById('config-info').innerHTML = `
+            <p><strong>URL:</strong> ${supabaseUrl}</p>
+            <p><strong>Key:</strong> ${supabaseKey.substring(0, 50)}...</p>
+        `;
+
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function testConnection() {
+            const status = document.getElementById('connection-status');
+            const result = document.getElementById('connection-result');
+            
+            status.innerHTML = '<span class="status loading">Đang kiểm tra...</span>';
+            result.style.display = 'none';
+
+            try {
+                const { data, error } = await supabase.auth.getSession();
+                status.innerHTML = '<span class="status success">✅ Kết nối thành công!</span>';
+                result.textContent = JSON.stringify({ status: 'Connected', data }, null, 2);
+                result.style.display = 'block';
+            } catch (error) {
+                status.innerHTML = '<span class="status error">❌ Kết nối thất bại!</span>';
+                result.textContent = JSON.stringify({ error: error.message }, null, 2);
+                result.style.display = 'block';
+            }
+        }
+
+        async function testSignUp() {
+            const status = document.getElementById('signup-status');
+            const result = document.getElementById('signup-result');
+            
+            status.innerHTML = '<span class="status loading">Đang tạo tài khoản...</span>';
+            result.style.display = 'none';
+
+            // Tạo email ngẫu nhiên hợp lệ (dùng số ngắn hơn)
+            const randomNum = Math.floor(Math.random() * 10000);
+            const email = `testuser${randomNum}@gmail.com`;
+            const password = 'TestPassword123!';
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: 'Test User',
+                            phone: '0123456789'
+                        }
+                    }
+                });
+                
+                if (error) throw error;
+
+                status.innerHTML = '<span class="status success">✅ Tạo tài khoản thành công!</span>';
+                result.textContent = JSON.stringify({ 
+                    message: 'Đăng ký thành công!',
+                    email: email, 
+                    password: password,
+                    user_id: data.user?.id,
+                    note: 'Kiểm tra email để xác thực (nếu bật email confirmation)'
+                }, null, 2);
+                result.style.display = 'block';
+            } catch (error) {
+                status.innerHTML = '<span class="status error">❌ Lỗi!</span>';
+                result.textContent = JSON.stringify({ 
+                    error: error.message,
+                    testedEmail: email 
+                }, null, 2);
+                result.style.display = 'block';
+            }
+        }
+
+        // Auto test
+        window.addEventListener('load', () => setTimeout(testConnection, 500));
+    </script>
+</body>
+</html>

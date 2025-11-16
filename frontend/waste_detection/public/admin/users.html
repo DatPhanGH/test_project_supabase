@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Users - Admin EcoSort</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="../images/logo.png" alt="EcoSort">
+                <span>EcoSort Admin</span>
+            </div>
+            <nav class="admin-nav">
+                <ul>
+                    <li><a href="index.html">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </a></li>
+                    <li><a href="users.html" class="active">
+                        <i class="fas fa-users"></i> Quản lý Users
+                    </a></li>
+                    <li><a href="models.html">
+                        <i class="fas fa-robot"></i> AI Models
+                    </a></li>
+                    <li><a href="categories.html">
+                        <i class="fas fa-tags"></i> Waste Categories
+                    </a></li>
+                    <li><a href="feedbacks.html">
+                        <i class="fas fa-comments"></i> Feedbacks
+                    </a></li>
+                    <!-- <li><a href="statistics.html">
+                        <i class="fas fa-chart-bar"></i> Thống kê
+                    </a></li> -->
+                </ul>
+            </nav>
+            <div class="admin-user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <span class="user-name" id="adminUserName">Admin</span>
+                    <span class="user-role">Administrator</span>
+                </div>
+                <button class="btn-logout" onclick="handleAdminLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 class="page-title">Quản lý Users</h1>
+                <div class="admin-actions">
+                    <button class="btn-admin btn-primary" onclick="refreshUsers()">
+                        <i class="fas fa-sync"></i> Làm mới
+                    </button>
+                    <a href="../index.html" class="btn-back-to-site">
+                        <i class="fas fa-home"></i> Về trang chủ
+                    </a>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <!-- Search and filters -->
+                <div class="filters-bar">
+                    <input type="text" id="userSearch" placeholder="Tìm kiếm user (tên, email)..." 
+                           class="search-input">
+                    <select id="roleFilter" class="filter-select">
+                        <option value="all">Tất cả roles</option>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <select id="activeFilter" class="filter-select">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="true">Hoạt động</option>
+                        <option value="false">Đã khóa</option>
+                    </select>
+                </div>
+
+                <!-- Users table -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="7" class="loading-text">Đang tải...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="js/admin-main.js"></script>
+    <script src="js/admin-users.js"></script>
+    <script>
+        // Refresh users function
+        async function refreshUsers() {
+            const filters = {
+                search: document.getElementById('userSearch')?.value || '',
+                role: document.getElementById('roleFilter')?.value || 'all',
+                is_active: document.getElementById('activeFilter')?.value === 'all' 
+                    ? undefined 
+                    : document.getElementById('activeFilter')?.value === 'true'
+            };
+            await window.AdminUsers.loadUsersTable(filters);
+            window.AdminMain.showAdminAlert('Đã làm mới danh sách users', 'success');
+        }
+    </script>
+</body>
+</html>
+

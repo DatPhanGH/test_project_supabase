@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - EcoSort</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="../images/logo.png" alt="EcoSort">
+                <span>EcoSort Admin</span>
+            </div>
+            <nav class="admin-nav">
+                <ul>
+                    <li><a href="index.html" class="active">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </a></li>
+                    <li><a href="users.html">
+                        <i class="fas fa-users"></i> Quản lý Users
+                    </a></li>
+                    <li><a href="models.html">
+                        <i class="fas fa-robot"></i> AI Models
+                    </a></li>
+                    <li><a href="categories.html">
+                        <i class="fas fa-tags"></i> Waste Categories
+                    </a></li>
+                    <li><a href="feedbacks.html">
+                        <i class="fas fa-comments"></i> Feedbacks
+                    </a></li>
+                    <!-- <li><a href="statistics.html">
+                        <i class="fas fa-chart-bar"></i> Thống kê
+                    </a></li> -->
+                </ul>
+            </nav>
+            <div class="admin-user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <span class="user-name" id="adminUserName">Admin</span>
+                    <span class="user-role">Administrator</span>
+                </div>
+                <button class="btn-logout" onclick="handleAdminLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 class="page-title">Dashboard</h1>
+                <div class="admin-actions">
+                    <a href="../index.html" class="btn-back-to-site">
+                        <i class="fas fa-home"></i> Về trang chủ
+                    </a>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <!-- Statistics Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #3b82f620; color: #3b82f6;">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalImagesStat">0</h3>
+                            <p>Ảnh đã phân loại</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #22c55e20; color: #22c55e;">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalPredictionsStat">0</h3>
+                            <p>Tổng predictions</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #eab30820; color: #eab308;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalUsersStat">0</h3>
+                            <p>Tổng người dùng</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #ef444420; color: #ef4444;">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalFeedbacksStat">0</h3>
+                            <p>Tổng feedbacks</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Tỷ lệ từng loại rác</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Chi tiết theo loại rác</h3>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Loại rác</th>
+                                        <th>Màu thùng</th>
+                                        <th>Số lượng</th>
+                                        <th>Tỷ lệ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categoryStatsTableBody">
+                                    <tr>
+                                        <td colspan="4" class="loading-text">Đang tải...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="js/admin-main.js"></script>
+    <script src="js/admin-statistics.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await window.AdminStatistics.loadDashboardStatistics();
+        });
+    </script>
+</body>
+</html>
+
