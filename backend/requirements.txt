@@ -1,0 +1,9 @@
+flask
+ultralytics
+supabase
+google-auth
+google-auth-oauthlib
+google-api-python-client
+python-dotenv
+PyJWT
+flask-cors
